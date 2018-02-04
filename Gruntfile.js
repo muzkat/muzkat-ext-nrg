@@ -7,8 +7,9 @@ module.exports = function (grunt) {
         concat: {
             map: {
                 src: [
-                    // projectRoot + 'app/debug.js',
                     projectRoot + 'app/model.js',
+                    projectRoot + 'app/gridctrl.js',
+                    projectRoot + 'app/grid.js',
                     projectRoot + 'app/main.js'
                 ],
                 dest: 'public/js/muzkatnrg.debug.js'
