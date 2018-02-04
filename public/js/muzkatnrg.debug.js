@@ -182,6 +182,7 @@ Ext.define('Mzk.Nrg.Main', {
             data: {
                 storeRecordCount: 0,
                 activeItem: null,
+                recordActive: null,
                 activeContact: {
                     ansprechpartner: {
                         anrede: null,
@@ -239,6 +240,32 @@ Ext.define('Mzk.Nrg.Main', {
                             iconCls: 'x-fa fa-envelope-o', tooltip: 'Mail an Partner verschicken', scale: 'medium'
                         }, {
                             iconCls: 'x-fa fa-desktop', tooltip: 'Webseite aufrufen', scale: 'medium'
+                        }, {
+                            xtype: 'tbfill'
+                        }, {
+                            iconCls: 'x-fa fa-map',
+                            tooltip: 'Firmenstandort auf Map anzeigen',
+                            scale: 'medium',
+                            handler: function (btn) {
+                                var vm = btn.up('#issueWrapper').getViewModel();
+                                var record = vm.get('recordActive');
+                                if (Ext.isDefined(record) && record !== null) {
+                                    Ext.create('Ext.window.Window', {
+                                        title: 'DVGW Map',
+                                        height: document.body.clientHeight * 0.8,
+                                        width: document.body.clientHeight * 0.8,
+                                        layout: 'fit',
+                                        items: {  // Let's put an empty grid in just to illustrate fit layout
+                                            xtype: 'muzkatBpcWrapperMain',
+                                            point: {
+                                                lat: 13,
+                                                lng: 52
+                                            },
+                                            defaultCenter: 'test'
+                                        }
+                                    }).show();
+                                }
+                            }
                         }, {
                             xtype: 'tbfill'
                         }, {
@@ -363,6 +390,7 @@ Ext.define('Mzk.Nrg.Main', {
                     // this.getViewModel().set('activeContact', contactData);
                 }
                 this.getViewModel().set('activeItem', JSON.stringify(recordData));
+                this.getViewModel().set('recordActive', record);
             }
 
 
