@@ -250,20 +250,29 @@ Ext.define('Mzk.Nrg.Main', {
                                 var vm = btn.up('#issueWrapper').getViewModel();
                                 var record = vm.get('recordActive');
                                 if (Ext.isDefined(record) && record !== null) {
-                                    Ext.create('Ext.window.Window', {
-                                        title: 'DVGW Map',
-                                        height: document.body.clientHeight * 0.8,
-                                        width: document.body.clientHeight * 0.8,
-                                        layout: 'fit',
-                                        items: {  // Let's put an empty grid in just to illustrate fit layout
-                                            xtype: 'muzkatBpcWrapperMain',
-                                            point: {
-                                                lat: 13,
-                                                lng: 52
-                                            },
-                                            defaultCenter: 'test'
+                                    var recordData = record.getData();
+                                    if (recordData['_source'] && recordData['_source']['geo']) {
+                                        var geo = recordData['_source']['geo'];
+                                        if (geo && geo.status && geo.status === 'OK') {
+                                            var loc = geo['results'][0]['geometry']['location'];
+                                            if(loc.lat && loc.lng){
+                                                Ext.create('Ext.window.Window', {
+                                                    title: 'DVGW Map',
+                                                    height: document.body.clientHeight * 0.8,
+                                                    width: document.body.clientHeight * 0.8,
+                                                    layout: 'fit',
+                                                    items: {  // Let's put an empty grid in just to illustrate fit layout
+                                                        xtype: 'muzkatBpcWrapperMain',
+                                                        point: {
+                                                            lat: loc.lat,
+                                                            lng: loc.lng
+                                                        },
+                                                        defaultCenter: record.get('code')
+                                                    }
+                                                }).show();
+                                            }
                                         }
-                                    }).show();
+                                    }
                                 }
                             }
                         }, {
