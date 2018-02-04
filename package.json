@@ -1,0 +1,35 @@
+{
+  "name": "muzkat-ext-nrg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "buildMap": "grunt concat",
+    "build": "grunt concat && grunt dev",
+    "buildApp": "npm run buildMap && npm run bundle",
+    "bundle": "browserify src/app/wrapper.js -o public/js/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muzkat/muzkat-ext-nrg.git"
+  },
+  "author": "",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/muzkat/muzkat-ext-nrg/issues"
+  },
+  "homepage": "https://github.com/muzkat/muzkat-ext-nrg#readme",
+  "dependencies": {
+    "muzkat-ext-app": "^1.0.2"
+  },
+  "devDependencies": {
+    "express": "^4.16.2",
+    "browserify": "^15.2.0",
+    "grunt": "^1.0.1",
+    "grunt-browserify": "^5.2.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0"
+  }
+}
