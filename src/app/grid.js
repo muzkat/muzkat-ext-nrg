@@ -1,3 +1,25 @@
+Ext.define('Mzk.Nrg.Helper', {
+    singleton: true,
+    dataStoreUrl: 'http://pro.bnz-power.com/gas/marketpartner',
+    tooltipRenderer: function (value, metaData, record, rowIndex, colIndex) {
+        if (Ext.isDefined(record)) {
+            var recordData = record.getData();
+            if (recordData['_source'] && recordData['_source']['contact']) {
+                var contactData = recordData['_source']['contact'];
+                if (contactData.ansprechpartner) {
+                    var tooltip = '<table>';
+                    Ext.iterate(contactData.ansprechpartner, function (key, val) {
+                        tooltip += '<tr></tr><td>' + key + '</td><td>' + val + '</td></tr>';
+                    });
+                    tooltip += '</table>';
+                    metaData.tdAttr = 'data-qtip=' + Ext.encode(tooltip);
+                }
+            }
+        }
+        return value;
+    }
+});
+
 Ext.define('Mzk.Nrg.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.accountGrid',
@@ -6,7 +28,9 @@ Ext.define('Mzk.Nrg.Grid', {
     listeners: {
         select: 'onSelect'
     },
-    title: 'DVGW Marktpartner',
+    bind: {
+        title: 'DVGW Marktpartner - {storeRecordCount}'
+    },
     hideHeaders: true,
     tbar: [{
         xtype: 'container',
@@ -35,41 +59,47 @@ Ext.define('Mzk.Nrg.Grid', {
             text: 'Code',
             dataIndex: 'code',
             flex: 2,
+            renderer: Mzk.Nrg.Helper.tooltipRenderer
         },
         {
             text: 'Typ',
             flex: 1,
             dataIndex: 'type',
+            renderer: Mzk.Nrg.Helper.tooltipRenderer
 
         },
         {
             text: 'Funktion',
             flex: 1,
             dataIndex: 'function',
+            renderer: Mzk.Nrg.Helper.tooltipRenderer
 
         }, {
             text: 'Status',
             flex: 1,
             dataIndex: 'status',
+            renderer: Mzk.Nrg.Helper.tooltipRenderer
 
         },
         {
             text: 'Firma',
             flex: 1,
             dataIndex: 'company',
+            renderer: Mzk.Nrg.Helper.tooltipRenderer
 
         },
         {
             text: 'Ort',
             flex: 1,
             dataIndex: 'city',
+            renderer: Mzk.Nrg.Helper.tooltipRenderer
 
         }],
 
     store: Ext.create('Ext.data.BufferedStore', {
         proxy: {
             type: 'ajax',
-            url: 'http://pro.bnz-power.com/gas/marketpartner',
+            url: Mzk.Nrg.Helper.dataStoreUrl,
             useDefaultHeader: false,
             reader: {
                 type: 'json',
@@ -80,5 +110,13 @@ Ext.define('Mzk.Nrg.Grid', {
         pageSize: 100,
         autoLoad: true,
         model: 'Mzk.Nrg.GridLine'
-    })
+    }),
+    initComponent: function () {
+        this.callParent(arguments);
+        var store = this.getStore();
+        var me = this;
+        store.on('load', function (store) {
+            me.up('#issueWrapper').getViewModel().set('storeRecordCount', store.getTotalCount());
+        });
+    }
 });

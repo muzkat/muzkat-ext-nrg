@@ -7,6 +7,7 @@ Ext.define('Mzk.Nrg.Main', {
         itemId: 'issueWrapper',
         viewModel: {
             data: {
+                storeRecordCount: 0,
                 activeItem: null,
                 activeContact: {
                     ansprechpartner: {
@@ -46,23 +47,37 @@ Ext.define('Mzk.Nrg.Main', {
             {
                 xtype: 'container',
                 flex: 3,
-                layout: {
-                    type: 'vbox',
-                    align: 'stretch'
-                },
+                layout: 'fit',
                 defaults: {
-                    flex: 1,
                     padding: '10 10 10 10'
                 },
+                padding: '25 25 25 25',
                 items: [
                     {
-                        xtype: 'container', layout: {
+                        xtype: 'panel', layout: {
                             type: 'vbox',
                             align: 'stretch'
-                        }, flex: 4,
+                        }, flex: 4, header: false,
+                        tbar: [{
+                            iconCls: 'x-fa fa-phone', tooltip: 'Anrufen', scale: 'medium'
+                        }, {
+                            iconCls: 'x-fa fa-fax', tooltip: 'Fax an Partner versenden', scale: 'medium'
+                        }, {
+                            iconCls: 'x-fa fa-envelope-o', tooltip: 'Mail an Partner verschicken', scale: 'medium'
+                        }, {
+                            iconCls: 'x-fa fa-desktop', tooltip: 'Webseite aufrufen', scale: 'medium'
+                        }, {
+                            xtype: 'tbfill'
+                        }, {
+                            iconCls: 'x-fa fa-bookmark', tooltip: 'Als Favorit ablegen', scale: 'medium'
+                        }, {
+                            iconCls: 'x-fa fa-camera', tooltip: 'Screenshot erstellen', scale: 'medium'
+                        }, {
+                            iconCls: 'x-fa fa-print', tooltip: 'Kontaktinformationen ausdrucken', scale: 'medium'
+                        }],
                         defaults: {
                             flex: 1,
-                            padding: '10 10 10 10'
+                            padding: '3 3 3 3'
                         }, items: [{
                             xtype: 'fieldset',
                             bind: {
@@ -70,27 +85,37 @@ Ext.define('Mzk.Nrg.Main', {
                             },
                             collapsible: true,
                             defaultType: 'textfield',
-                            defaults: {anchor: '100%'},
+                            defaults: {anchor: '100%', padding: '0 0 0 0'},
                             layout: 'anchor',
                             items: [{
-                                fieldLabel: 'Field 1',
-                                name: 'field1',
+                                fieldLabel: 'Name',
+                                bind: {
+                                    value: '{activeContact.ansprechpartner.vorname} {activeContact.ansprechpartner.nachname}'
+                                }
+                            }, {
+                                fieldLabel: 'E-Mail',
                                 bind: {
                                     value: '{activeContact.ansprechpartner.email}'
                                 }
                             }, {
-                                fieldLabel: 'Field 2',
-                                name: 'field2'
+                                fieldLabel: 'Telefon',
+                                bind: {
+                                    value: '{activeContact.ansprechpartner.telefon}'
+                                }
+                            }, {
+                                fieldLabel: 'Fax',
+                                bind: {
+                                    value: '{activeContact.ansprechpartner.fax}'
+                                }
                             }]
-
                         }, {
                             xtype: 'fieldset',
                             bind: {
-                                title: 'Code Informationen - {activeContact.codenummer.codenummer}'
+                                title: 'Code Informationen - {activeContact.codenummer.codenummer} - {activeContact.codenummer.marktfunktion}'
                             },
                             collapsible: true,
                             defaultType: 'textfield',
-                            defaults: {anchor: '100%'},
+                            defaults: {anchor: '100%', padding: '0 0 0 0'},
                             layout: 'anchor',
                             items: [{
                                 fieldLabel: 'CodeTyp',
@@ -102,31 +127,43 @@ Ext.define('Mzk.Nrg.Main', {
                                 bind: {
                                     value: '{activeContact.codenummer.codenummer}'
                                 }
+                            }, {
+                                fieldLabel: 'Von',
+                                bind: {
+                                    value: '{activeContact.codenummer.von}'
+                                }
+                            }, {
+                                fieldLabel: 'Bis',
+                                bind: {
+                                    value: '{activeContact.codenummer.bis}'
+                                }
                             }]
 
                         }, {
                             xtype: 'fieldset',
-                            title: 'Firma',
+                            title: 'Firmendetails',
                             collapsible: true,
                             defaultType: 'textfield',
-                            defaults: {anchor: '100%'},
+                            defaults: {anchor: '100%', padding: '0 0 0 0'},
                             layout: 'anchor',
                             items: [{
-                                fieldLabel: 'Field 1',
-                                name: 'field1',
+                                fieldLabel: 'Ort',
                                 bind: {
-                                    value: '{activeContact.ansprechpartner.email}'
+                                    value: '{activeContact.firmenanschrift.plz} {activeContact.firmenanschrift.ort}'
                                 }
                             }, {
-                                fieldLabel: 'Field 2',
-                                name: 'field2'
+                                fieldLabel: 'Unternehmen',
+                                bind: {
+                                    value: '{activeContact.firmenanschrift.unternehmen}'
+                                }
+                            }, {
+                                fieldLabel: 'Web',
+                                bind: {
+                                    value: '{activeContact.firmenanschrift.url}'
+                                }
                             }]
 
                         }]
-                    }, {
-                        xtype: 'container', bind: {
-                            html: '{activeItem}'
-                        }
                     }]
             }],
         updateIssue: function (record) {
